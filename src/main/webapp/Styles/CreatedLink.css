@@ -1,0 +1,113 @@
+@charset "UTF-8";
+html{
+	font-size: 14px;
+	background-color: #a3a3a3;
+}
+.header{
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background-color: #414141;
+	position: relative;
+	top: -8px;
+}
+.user-account{
+	border-radius: 50%;
+	text-align: center;
+	position: relative;
+	top: 5px;
+	left: 95%;
+	background: #ffffff;
+	width: 40px;
+	height: 40px;
+}
+.account-menu{
+	border: none;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	background: #ffffff;
+}
+.name{
+	margin: 0 0 0 10px;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+.user-menu{
+	position: fixed;
+	top: 60px;
+	left: 88%;
+	flex-direction: column;
+	background: #ffffff;
+	width: 150px;
+	height: 65px;
+	display: none;
+}
+.menu-link{
+	width: 150px;
+	height: 32.5px;
+	background: #ffffff;
+}
+.logo{
+	position: relative;
+	padding: 4% 0 0 30%;
+	width: 300px;
+	height: 140px;
+}
+.first{
+	font-size: 50px;
+	font-family: Georgia, 'Times New Roman', Times, serif;
+	position: absolute;
+	margin: 0 0 0 0;
+}
+.second{
+	font-size: 40px;
+	font-family: Georgia, 'Times New Roman', Times, serif;
+	position: absolute;
+	margin: 60px 0 0 0;
+}
+.input-line{
+	display: inline-block;
+	vertical-align: top;
+	width: 600px;
+	height: 30px;
+	position: relative;
+	left: 30%;
+}
+.input-link{
+	display: inline;
+	vertical-align: top;
+}
+input[type=text]{
+	font-size: 28px;
+	border-radius: 4%;
+	position: relative;
+	top: 0px;
+	width: 400px;
+	height: 30px;
+}
+.input-button{
+	display: inline;
+	width: 150px;
+	height: 36px;
+	position: relative;
+}
+.generation{
+	font-size: 28px;
+	border-radius: 15%;
+	margin: 0 0 0 10px;
+	width: 120px;
+	height: 36px;
+}
+.link-place {
+	position: fixed;
+	display: flex;
+	font-size: 28px;
+	border-radius: 4%;
+	width: 500px;
+	height: 200px;
+	margin: 15px 0 0 200px;
+	background: #414141;
+	color: #ffffff;
+}

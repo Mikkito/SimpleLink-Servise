@@ -1,0 +1,159 @@
+@charset "UTF-8";
+html{
+	font-size: 14px;
+	background-color: #a3a3a3;
+}
+.header{
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background-color: #414141;
+	position: relative;
+	top: -8px;
+}
+.user-account{
+	border-radius: 50%;
+	text-align: center;
+	position: relative;
+	top: 5px;
+	left: 95%;
+	background: #ffffff;
+	width: 40px;
+	height: 40px;
+}
+.account-menu{
+	border: none;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	background: #ffffff;
+}
+.name{
+	margin: 0 0 0 10px;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+.user-menu{
+	position: fixed;
+	top: 60px;
+	left: 88%;
+	flex-direction: column;
+	background: #ffffff;
+	width: 150px;
+	height: 65px;
+	display: none;
+}
+.menu-link{
+	width: 150px;
+	height: 32.5px;
+	background: #ffffff;
+}
+.result-table {
+	margin-bottom: 20px;
+	border: 1px solid #dddddd;
+	border-collapse: collapse;
+}
+.result-table th {
+	font-weight: bold;
+	padding: 5px;
+	background: #efefef;
+	border: 1px solid #dddddd;
+}
+.result-table td {
+	border: 1px solid #dddddd;
+	padding: 5px;
+}
+.LinkMenu{
+	display: none;
+	flex-direction: column;
+	background-color: #414141;
+	border-color: #dddddd;
+	border: 5px;
+	vertical-align: top;
+	width: 300px;
+	height: 500px;
+	position: fixed;
+	top: 20%;
+	left: 40%;
+	z-index: 3;
+}
+.form-text {
+	size: 20px;
+	color: #ffffff;
+	font-weight: bold;
+}
+.longling-div {
+	display: inline;
+	text-align: center;
+	width: 280px;
+	height: 100px;
+}
+.LongLink {
+	display: inline;
+	margin: 0 0 0 6px;
+	width: 280px;
+	size: 25px;
+}
+.shortlink-div {
+	display: inline;
+	text-align: center;
+	width: 280px;
+	height: 100px;
+}
+.ShortLink {
+	display: inline;
+	margin: 0 0 0 6px;
+	width: 280px;
+	size: 25px;
+}
+.transition-div {
+	display: inline;
+	text-align: center;
+	width: 280px;
+	height: 100px;
+}
+.Transition {
+	display: inline;
+	margin: 0 0 0 6px;
+	width: 280px;
+	size: 25px;
+}
+.avail-div {
+	display: inline;
+	text-align: center;
+	width: 280px;
+	height: 100px;
+}
+.AvailTransition {
+	display: inline;
+	margin: 0 0 0 6px;
+	width: 280px;
+	size: 25px;
+}
+.time-div {
+	display: inline;
+	text-align: center;
+	width: 280px;
+	height: 100px;
+}
+.TimeToLife {
+	display: inline;
+	margin: 0 0 0 6px;
+	width: 280px;
+	size: 25px;
+}
+.ChangeLink {
+	position: fixed;
+	margin: 40px 0 0 -274px;
+	size: 25px;
+	width: 100px;
+	height: 25px;
+}
+.DropMenu {
+	position: fixed;
+	margin: 347px 20px 0 180px; 
+	size: 25px;
+	width: 100px;
+	height: 25px;
+}
