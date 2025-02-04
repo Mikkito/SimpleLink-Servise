@@ -6,14 +6,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 
 import Model.DataBase;
 import Model.User;
 
+/**
+ * Данный сервлет осуществляет аутентификацию пользователей
+ */
 @WebServlet("/Authentication")
 public class Authentication extends HttpServlet {
 	public Authentication() {
@@ -21,6 +22,14 @@ public class Authentication extends HttpServlet {
     }
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		/**
+		 * Из POST запроса получаем параметры пароль и имя пользователя
+		 * Создаем объект пользователя с именем и паролем
+		 * Производим поиск пользователя в базе данных используя checkUser
+		 * В случае, если пользователь найден создаем куки имени и uuid
+		 * В случае, если пользователь не найден пересылаем пользователя на страницу авторизации и выводим сообщение
+		 * Неверный логин или пароль
+		 */
 		String name = request.getParameter("user-name");
 		String password = request.getParameter("pass");
 		User user = new User(name, password);

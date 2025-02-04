@@ -115,24 +115,28 @@ input[type=text] {
 	font-size: 20px;
 	top: 30%;
 	left: 30%;
-	width: 600px;
-	height: 100px;
+	width: 630px;
+	height: 150px;
 	z-index: 1000;
 }
-.LoginID {
-	font-size: 25px;
+p.LoginID {
+	text-align: center;
+	font-size: 20px;
 	color: #ffffff;
 }
-.uuid-place {
+input.uuid-place {
 	display: inline-block;
 	margin: 5px 0 0 10px;
-	width: 60xp;
-	height: 20px;
+	width: 480px;
+	height: 30px;
 	size: 20px;
 }
-.submit {
+input.submit {
 	display: inline-block;
-	margin: 5px 0 0 120px;
-	width: 80px;
-	height: 30px;
+	position: relative;
+	margin: 0 0 0 520px;
+	top: -35px;
+	left: 0px;
+	width: 100px;
+	height: 35px;
 }

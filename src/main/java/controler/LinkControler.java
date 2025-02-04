@@ -21,8 +21,16 @@ public class LinkControler extends HttpServlet {
         super();
         
     }
-    
+    /**
+     * Получаем пост запрос с главной страницы приложения содержащих адрес длинной ссылки которую хочет сократить пользователь
+     */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		/**
+		 * Инициализируем переменные для куки, а также переменную пользователя.
+		 * Затем считываем куки и при наличии там uuid пользователя создаем ссылку от его имени
+		 * В случае отсутствия генерируем гостевой uuid и создаем ссылку от его имени, в этом случае гость сможет создавать
+		 * ссылки под своим uuid пока uuid остается записан в куки или же он может зайти по uuid, используя соответствующий функционал приложения
+		 */
 		Cookie[] cookies = request.getCookies();
 		Cookie cookie = null;
 		User user = null;
@@ -42,6 +50,10 @@ public class LinkControler extends HttpServlet {
 			user = DataBase.getUser(DataBase.linkBaseCon(), cookie.getValue());
 		}
 		String longLink = request.getParameter("longlink");
+		/**
+		 * Проверяем создавалась ли короткая ссылка на указанный адрес ранее для этого пользователя, если создавалась возвращает уже созданную,
+		 * если нет производит генерацию новой ссылки и возвращает её значение в ответе пользователю. Ответ пересылается на главную страницу. 
+		 */
 		if (DataBase.checkLinkThisUser(DataBase.linkBaseCon(), user.getUuid(), longLink) != null) {
 			request.setAttribute("shortLink", DataBase.checkLinkThisUser(DataBase.linkBaseCon(), user.getUuid(), longLink));
 			ServletContext servletContext = getServletContext();

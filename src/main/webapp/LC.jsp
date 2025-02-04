@@ -22,11 +22,17 @@
                         if(cookies != null) {
                             for(Cookie c: cookies) {
                                 if("name".equals(c.getName())) {
-                                    nameChar = c.getValue().toCharArray();
-                                	out.println(nameChar[0]);
-                                	break;}
+                                    if (c.getValue() == "guest"){
+                                    	out.println("?");
+                                    } else{
+	                                	nameChar = c.getValue().toCharArray();
+	                                	out.println(nameChar[0]);
+	                                	break;}}
                         	}
-                        } else if(cookies == null || nameChar == null) { out.println("?");}%>
+                            if (nameChar == null){
+                            	out.println("?");
+                            }
+                        } else if(cookies == null && nameChar == null) { out.println("?");}%>
                         </h3>
                     </button>
                 </div>
@@ -42,7 +48,7 @@
                         	break;}
                 	} if (nameChar == null){
                 		for(Cookie c: cookies) {
-                            if("uuid".equals(c.getName())) {
+                        	if("uuid".equals(c.getName())) {
                             	out.write("<button class=\"menu-link\" onclick=\"general()\">Главная</button>");
                             	out.write("<button class=\"menu-link\" onclick=\"output()\">Выйти</button>");
                             	break;}
@@ -56,23 +62,23 @@
                 <form method="POST" action="/SimpleLinkapp/LinkChanging">
 	                <div class="longlink-div">
 	                	<p class="form-text">Длинная ссылка:</p>
-                		<input type="text" class="LongLink" id="LongLink" value="">
+                		<input type="text" class="LongLink" name="LongLink" value="">
                 	</div>
 	                <div class="shortlink-div">
 	                	<p class="form-text">Короткая ссылка:</p>
-                		<input type="text" class="ShortLink" id="LongLink" value="">
+                		<input type="text" class="ShortLink" name="ShortLink" value="">
                 	</div>
                 	<div class="transition-div">
 	                	<p class="form-text">Количество совершенных переходов:</p>
-                		<input type="text" class="Transition" id="Transition" value="">
+                		<input type="text" class="Transition" name="Transition" value="">
                 	</div>
                 	<div class="avail-div">
                 		<p class="form-text">Доступные переходы:</p>
-                		<input type="text" class="AvailTransition" id="AvailTransition" value="">
+                		<input type="text" class="AvailTransition" name="AvailTransition" value="">
                 	</div>
                 	<div class="time-div">
                 		<p class="form-text">Ссылка доступна до:</p>
-                		<input type="text" class="TimeToLife" id="TimeToLife" value="">
+                		<input type="text" class="TimeToLife" name="TimeToLife" value="">
                 	</div>
                 	<button class="ChangeLink">Изменить</button>
                 </form>	
@@ -92,15 +98,15 @@
             	for (int i = 0; i < usersLinks.size(); i++){
             		ShortLink link = usersLinks.get(i);
             		String longLink = link.getLongLink();
-            		String shortLink = "http://localhost/SimpleLinkapp/lnk/" + link.getShortLink();
+            		String shortLink = "http://localhost:8080/SimpleLinkapp/lnk/" + link.getShortLink();
             		int transition = link.getTransition();
             		int atransition = link.getAvailTransition();
             		String timeToLife = link.getTtl().toString();
             		out.write("<tr class=\"" + i + "\"><td class=\"" + i + ".1\">" + longLink + "</td><td class=\"" + i + ".2\">" + shortLink + "</td>" +
             		"<td class=\"" + i + ".3\">" + transition + "</td><td class=\"" + i + ".4\">" + atransition + "</td>" +
             		"<td class=\"" + i + ".5\">" + timeToLife + "</td>" +
-            		"<td><button class=\"LinkMenuButton\" onclick=\"openLinkMenu("+ i +")\">Изменить ссылку</button></td>" +
-            		"<td><button class=\"DeleteLink\" onclick=\"deleteLink("+ i +")\">Удалить ссылку</button></td></tr>");
+            		"<td><button class=\"LinkMenuButton\" onclick=\"openLinkMenu(" + i + ")\">Изменить ссылку</button></td>" +
+            		"<td><button class=\"DeleteLink\" onclick=\"deleteLink(" + i + ")\">Удалить ссылку</button></td></tr>");
             	}%>
             	</table>
             </div>

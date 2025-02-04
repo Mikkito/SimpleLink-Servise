@@ -26,6 +26,7 @@ function openLinkMenu(i){
 	let longLink = item[0].innerHTML;
 	item = document.getElementsByClassName(i + ".2");
 	let shortLink = item[0].innerHTML;
+	shortLink = shortLink.replace("http://localhost:8080/SimpleLinkapp/lnk/", "");
 	item = document.getElementsByClassName(i + ".3");
 	let transition = item[0].innerHTML;
 	item = document.getElementsByClassName(i + ".4");
@@ -62,7 +63,7 @@ function deleteLink(i){
 	let data = document.getElementsByClassName(i + ".2");
 	let uuid = getCookie("uuid");
 	let shortLink = data[0].innerHTML;
-	
+	shortLink = shortLink.replace("http://localhost:8080/SimpleLinkapp/lnk/", "");
 	let body = 'uuid=' + encodeURIComponent(uuid) + '&shortLink=' + encodeURIComponent(shortLink);
 	xhr.overrideMimeType("application/x-www-form-urlencoded");
 	xhr.open("POST", "http://localhost:8080/SimpleLinkapp/DeleteLink", true);

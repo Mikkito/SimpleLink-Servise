@@ -3,7 +3,6 @@ package Model;
 import java.security.*;
 import java.util.HexFormat;
 import java.time.*;
-import java.util.UUID;
 
 public class ShortLink {
 	private String longLink;
@@ -16,6 +15,7 @@ public class ShortLink {
 	public ShortLink() {
 		
 	}
+	// Стандартный конструктор генерирующий короткую ссылку по uuid пользователя и длинной ссылке
 	public ShortLink(String id, String link) {
 		setUUID(id);
 		setLongLink(link);
@@ -23,13 +23,16 @@ public class ShortLink {
 		setAvailTransition(20);
 		setDate(lastDate(7));
 	}
+	// Пользовательский конструктор для создания ссылки с определенными значениями срока жизни и переходов
 	public void shortLink(String link, int avail, int ttl) {
 		setLongLink(link);
 		setShortLink(link);
 		setAvailTransition(avail);
 		setDate(lastDate(ttl));
 	}
-	
+	/**
+	 * Блок геттеро и сеттеров, для записи значений в объект и получения их из объекта соответственно
+	 */
 	public void setUUID(String id) {
 		this.uuid = id;
 	}
@@ -47,11 +50,6 @@ public class ShortLink {
 	}
 	public void setDate(LocalDate date) {
 		this.ttl = date;
-	}
-	private LocalDate lastDate(int days) {
-		LocalDate createDay = LocalDate.now();
-		LocalDate lastDay = createDay.plusDays(days);
-		return lastDay;
 	}
 	public String getUuid() {
 		return uuid;
@@ -71,12 +69,32 @@ public class ShortLink {
 	public LocalDate getTtl() {
 		return ttl;
 	}
-	
-	// Метод для генерации короткой ссылки на основе хэша MD5
+	/**
+	 * Метод увеличивает текущую дату на заданное количество дней и возвращает день, когда ссылка
+	 * должна стать недействительной
+	 * @param days количество дней которые ссылка будет существовать
+	 * @return возвращает значение типа LocalDate которое на days больше текущей даты на сервере
+	 */
+	private LocalDate lastDate(int days) {
+		LocalDate createDay = LocalDate.now();
+		LocalDate lastDay = createDay.plusDays(days);
+		return lastDay;
+	}
+	/**
+	 *  Метод для генерации короткой ссылки на основе хэша MD5
+	 * @param longlink строка длинной ссылки для которой необходимо сгенерировать короткую
+	 * @return Короткая ссылка
+	 */
 	private String shortLinkGenerator(String longlink) {
 		int i = 0;
 		int d = 6;
 		try {
+			/** На основе строки длинной ссылки и uuid пользователя получаем зашифрованную алгоритмом MD5 строку
+			 * Для начала пытаемся сгенерировать строку из 6 символов и берем первые 6 от сгенерированной, далее
+			 * производим проверку ссылок в базе данных на возникновение коллизии, в случае ее возникновения сдвигаемся на
+			 * одно значение по строке и берем другие 6 символов, если шести символьной строки подобрать не удалось расширяем до 7
+			 * и снова обходим строку.
+			 */
 			String sLink = longlink + uuid;
 			MessageDigest md5 = MessageDigest.getInstance("MD5");
 			byte[] messageDigest = md5.digest(sLink.getBytes());
@@ -98,13 +116,19 @@ public class ShortLink {
 			throw new RuntimeException(e);
 		}
 	}
-	
+	/**
+	 * Метод для проверки наличия ссылки в базе
+	 * @param shLink передаем токен короткой ссылки
+	 * @return получаем true при наличии совпадений и false, если совпадений нет
+	 */
 	private boolean checkShLink(String shLink) {
 		boolean check = false;
 		check = DataBase.checkShLink(DataBase.linkBaseCon(), shLink);
 		return check;
 	}
-	
+	/**
+	 * Метод выполняет сохранение ссылки в базу
+	 */
 	public void saveLink() {
 		DataBase.insertNewLink(DataBase.linkBaseCon(), this);
 	}

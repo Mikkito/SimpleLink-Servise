@@ -3,8 +3,6 @@ package Model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -62,17 +60,16 @@ public class DataBase {
 	 * при отсутствии переводит на сайт сокращения ссылок
 	 */
 	public static String readLink(Connection connection, String shortLink) {
-		String longLink = null;
+		String longLink = "";
 		try {
 			PreparedStatement statement = connection.prepareStatement("SELECT longlink FROM links WHERE shortlink = ?");
 			statement.setString(1, shortLink);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				longLink = resultSet.getString(1);
-				} else {
-					longLink = "SimpleLink";
+				longLink = resultSet.getString("longlink");
+			} else {
+				longLink = "http://localhost:8080/SimpleLinkapp/SimpleLink";
 				}
-			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -112,7 +109,7 @@ public class DataBase {
 	 */
 	public static void changeLink(Connection connection, ShortLink newdata) {
 		try {
-			PreparedStatement statement = connection.prepareStatement("UPDATA links SET uuid = ?, longlink = ?, shortlink = ?, atransition = ?, ttl = ?");
+			PreparedStatement statement = connection.prepareStatement("UPDATE links SET uuid = ?, longlink = ?, shortlink = ?, atransition = ?, ttl = ?");
 			statement.setString(1, newdata.getUuid());
 			statement.setString(2, newdata.getLongLink());
 			statement.setString(3, newdata.getShortLink());
@@ -177,7 +174,7 @@ public class DataBase {
 				transition = resultSet.getInt("transition");
 				transition++;
 			}
-			statement = connection.prepareStatement("UPDATA links SET transition = ? WHERE shortlink = ?");
+			statement = connection.prepareStatement("UPDATE links SET transition = ? WHERE shortlink = ?");
 			statement.setInt(1, transition);
 			statement.setString(2, link);
 			statement.executeUpdate();
@@ -187,10 +184,33 @@ public class DataBase {
 		
 	}
 	/**
-	 * 
-	 * @param connection
-	 * @param newUser
-	 * @return
+	 * Метод для контроля оставшихся переходов в случае если доступные переходы закончились удаляет ссылку
+	 * @param connection переменная соединения
+	 * @param link короткая ссылка по которой происходит преход. Указывается в формате токена
+	 */
+	public static void transitionControl(Connection connection, String link) {
+		try {
+			PreparedStatement statement = connection.prepareStatement("SELECT transition, atransition FROM links WHERE shortlink = ?");
+			statement.setString(1, link);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				int transition = resultSet.getInt("transition");
+				int atransition = resultSet.getInt("atransition");
+				if (transition >= atransition) {
+					statement = connection.prepareStatement("DELETE FROM links WHERE shortlink = ?");
+					statement.setString(1, link);
+					statement.executeUpdate();
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	/**
+	 * Сохраняет пользователя в таблицу users базы данных
+	 * @param connection переменная соединения
+	 * @param newUser пользователь которого добавляем в базу данных
+	 * @return Возвращает true, если операция выполнена успешно
 	 */
 	public static boolean saveUser(Connection connection, User newUser) {
 		boolean success = false;
@@ -207,6 +227,12 @@ public class DataBase {
 		}
 		return success;
 	}
+	/**
+	 * Метод реализующий проверку существования имени пользователя в базе данных
+	 * @param connection переменная соединения
+	 * @param name имя пользователя
+	 * @return возвращает true при наличии пользователя с указанным именем в базе
+	 */
 	public static boolean checkUsername(Connection connection, String name) {
 		boolean userExist = false;
 		try {
@@ -222,6 +248,14 @@ public class DataBase {
 		}
 		return userExist;
 	}
+	/**
+	 * Проверка наличия пользователя в базе данных, функция предназначена для авторизации пользователя на сайте,
+	 * используя хэш пароля и имя пользователя, она находит совпадения и возвращает uuid зарегистрированного пользователя или
+	 * строку "FALSE", если пользователя с указанными данными не существует
+	 * @param connection переменная соединения
+	 * @param user переменная содержащая объект user с именем и хэшом пароля внутри
+	 * @return возвращает uuid или "FALSE" при отсутствии пользователя в базе
+	 */
 	public static String checkUser(Connection connection, User user) {
 		String uuid = "FALSE";
 		try {
@@ -237,11 +271,15 @@ public class DataBase {
 		}
 		return uuid;
 	}
-
+	/**
+	 * Получение пользователя из таблицы возвращает объект User с параметрами uuid и username
+	 * @param connection переменная соединения с базой данных
+	 * @param uuid uuid пользователя
+	 */
 	public static User getUser(Connection connection, String uuid) {
 		User user = null;
 		try {
-			PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM users WHERE uuid = ?");
+			PreparedStatement statement = connection.prepareStatement("SELECT uuid, username FROM users WHERE uuid = ?");
 			statement.setString(1, uuid);
 			ResultSet resultSet = statement.executeQuery();
 			while(resultSet.next()) {
@@ -249,11 +287,43 @@ public class DataBase {
 				user.setUuid(resultSet.getString("uuid"));
 				user.setName(resultSet.getString("username"));
 			}
+			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return user;
 	}
+	/**
+	 * Метод написан для авторизации по uuid. Метод производит поиск переданного ему uuid в базе
+	 * и при нахождении возвращает uuid обратно и возвращает пустую строку, если указанного uuid не обнаруженно
+	 * @param connection переменная соединения с базой данных
+	 * @param uuid uuid пользователя совпадение с которым будет искать функция
+	 * @return возвращает uuid, если такой был найден или пустую строку, если переданного uuid нет в базе
+	 */
+	public static String checkReturnUuid(Connection connection, String uuid) {
+		String trueUuid = "";
+		try {
+			PreparedStatement statement = connection.prepareStatement("SELECT uuid FROM users WHERE uuid = ?");
+			statement.setString(1, uuid);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				trueUuid = resultSet.getString("uuid");
+			} else {
+				return trueUuid;
+			}
+			connection.close();
+		} catch (Exception e ) {
+			System.out.println(e);
+		}
+		return trueUuid;
+	}
+	/**
+	 * Метод возвращающий короткую ссылку пользователя по длинной ссылке и uuid пользователя
+	 * @param connection переменная соединения с базой данных
+	 * @param uuid значение uuid пользователя
+	 * @param longLink значение длинной ссылки пользователя
+	 * @return возвразяет короткую ссылку, если есть и null при отсутствии
+	 */
 	public static String checkLinkThisUser(Connection connection, String uuid, String longLink) {
 		String shortLink = null;
 		try {
@@ -265,6 +335,7 @@ public class DataBase {
 				return shortLink;
 			}
 			shortLink = resultSet.getString("shortlink");
+			connection.close();
 		} catch (Exception e) {
 			System.out.println(e);
 		}

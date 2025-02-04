@@ -41,6 +41,7 @@ public class LinkChanging extends HttpServlet {
 		newLink.setAvailTransition(availTransition);
 		newLink.setDate(localDate);
 		DataBase.changeLink(DataBase.linkBaseCon(), newLink);
+		response.sendRedirect("LC");
 	}
 }
 

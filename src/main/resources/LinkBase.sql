@@ -1,4 +1,4 @@
-CREATE TABLE links
+CREATE TABLE IF NOT EXISTS links
 (
     uuid TEXT,
     longlink TEXT,

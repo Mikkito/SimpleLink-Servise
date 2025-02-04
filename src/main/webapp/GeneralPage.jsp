@@ -23,9 +23,12 @@
                         if(cookies != null) {
                             for(Cookie c: cookies) {
                                 if("name".equals(c.getName())) {
-                                    nameChar = c.getValue().toCharArray();
-                                	out.println(nameChar[0]);
-                                	break;}
+                                    if (c.getValue() == "guest"){
+                                    	out.println("?");
+                                    } else{
+	                                	nameChar = c.getValue().toCharArray();
+	                                	out.println(nameChar[0]);
+	                                	break;}}
                         	}
                             if (nameChar == null){
                             	out.println("?");
@@ -76,7 +79,7 @@
             <div class="loginByUuid">
             	<form method="POST" action="/SimpleLinkapp/LoginUuid">
             		<p class="LoginID">Введите ваш UUID</p>
-            		<input class="uuid-place" id="uuid" type="text">
+            		<input class="uuid-place" id="uuid" type="text" name="uuid">
             		<input class="submit" type="submit" value="Войти">
             	</form>
             </div>
